@@ -19,14 +19,16 @@
 </head>
 <body class="min-h-screen flex flex-col">
   <header class="gradient-bg text-white py-6">
-    <div class="container mx-auto px-4 flex items-center justify-between">
-      <div class="flex items-center space-x-3">
-        <img src="BASE.jpeg" alt="BasePulseScore Logo" class="w-8 h-8">
-        <h1 class="text-xl font-bold">BasePulseScore</h1>
-        <span class="ml-4 text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center space-x-1">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <img src="BASE.jpeg" alt="BasePulseScore Logo" class="w-8 h-8">
+          <h1 class="text-xl font-bold">BasePulseScore</h1>
+        </div>
+        <a href="https://onchainkit.xyz" target="_blank" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center space-x-1">
           <span>Powered by OnchainKit + Covalent</span>
           <i data-feather="external-link" class="w-4 h-4"></i>
-        </span>
+        </a>
       </div>
     </div>
   </header>
@@ -58,12 +60,16 @@
         <p class="text-gray-600">Fetching your score...</p>
       </div>
 
-      <div id="resultContainer" class="hidden text-center mb-6">
-        <div id="scoreCircle" class="score-circle gradient-bg text-white">
-          <span id="scoreValue">0</span>
+      <div id="resultContainer" class="hidden">
+        <div class="text-center mb-6">
+          <div id="scoreCircle" class="score-circle gradient-bg text-white">
+            <span id="scoreValue">0</span>
+          </div>
         </div>
-        <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Your On-Chain Score</h3>
-        <p id="scoreDescription" class="text-gray-600">Calculated from your on-chain activity</p>
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Your On-Chain Score</h3>
+          <p id="scoreDescription" class="text-gray-600">Calculated from your on-chain activity</p>
+        </div>
       </div>
 
       <div id="insightsContainer" class="mt-8 hidden space-y-6">
@@ -79,7 +85,9 @@
 
       <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
-        <p class="text-gray-600 mb-4">Scores are normalized between <strong>0–100</strong> based on:</p>
+        <p class="text-gray-600 mb-4">
+          Scores are normalized between <strong>0–100</strong> based on:
+        </p>
         <ul class="list-disc ml-6 text-gray-700 mb-3">
           <li><strong>Transactions</strong> (40%)</li>
           <li><strong>Unique tokens</strong> (25%)</li>
@@ -105,12 +113,17 @@
           <span>@marckellinfo</span>
         </a>
       </div>
+
+      <div class="mt-8 text-center text-gray-500 text-sm">
+        <a href="https://app.ens.domains/marckell.base.eth" target="_blank" class="hover:underline">marckell.base.eth</a>
+      </div>
+
     </div>
   </main>
 
   <footer class="bg-gray-50 py-8">
     <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-      © 2025 BasePulseScore. Created by <a href="https://etherscan.io/address/marckell.base.eth" class="text-blue-600 hover:underline">marckell.base.eth</a>
+      © 2025 BasePulseScore. Created by <a href="https://app.ens.domains/marckell.base.eth" class="hover:underline">marckell.base.eth</a>
     </div>
   </footer>
 
@@ -135,102 +148,107 @@
       }
     }
 
+    async function fetchData(url){
+      const res = await fetch(url);
+      if(!res.ok) throw new Error("API fetch failed");
+      return res.json();
+    }
+
     async function fetchScore(wallet, network){
       const chainId=getChainId(network);
-      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?key=${COVALENT_API_KEY}`);
-      return await res.json();
+      return fetchData(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?key=${COVALENT_API_KEY}`);
     }
 
-    async function fetchNFTs(wallet, chainId){
-      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?nft=true&no-nft-fetch=false&key=${COVALENT_API_KEY}`);
-      return await res.json();
+    async function fetchNFTs(wallet, network){
+      const chainId=getChainId(network);
+      return fetchData(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?nft=true&no-nft-fetch=false&key=${COVALENT_API_KEY}`);
     }
 
-    async function fetchTransactions(wallet, chainId){
-      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?key=${COVALENT_API_KEY}`);
-      return await res.json();
+    async function fetchTransactions(wallet, network){
+      const chainId=getChainId(network);
+      return fetchData(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?key=${COVALENT_API_KEY}`);
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const form=document.getElementById('scoreForm');
-      form.addEventListener('submit', async (e)=>{
-        e.preventDefault();
-        const wallet=document.getElementById('walletAddress').value.trim();
-        const network=document.getElementById('networkSelect').value;
-        if(!/^0x[a-fA-F0-9]{40}$/.test(wallet)){
-          document.getElementById('errorMessage').classList.remove('hidden');
-          return;
-        }
-        document.getElementById('errorMessage').classList.add('hidden');
-        document.getElementById('loadingIndicator').classList.remove('hidden');
-        document.getElementById('resultContainer').classList.add('hidden');
-        document.getElementById('insightsContainer').classList.add('hidden');
+    document.getElementById('scoreForm').addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const wallet = document.getElementById('walletAddress').value.trim();
+      const network = document.getElementById('networkSelect').value;
 
-        try{
-          const chainId=getChainId(network);
-          const result=await fetchScore(wallet, network);
-          const nftData=await fetchNFTs(wallet, chainId);
-          const txData=await fetchTransactions(wallet, chainId);
+      if(!/^0x[a-fA-F0-9]{40}$/.test(wallet)){
+        document.getElementById('errorMessage').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('errorMessage').classList.add('hidden');
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+      document.getElementById('resultContainer').classList.add('hidden');
+      document.getElementById('insightsContainer').classList.add('hidden');
 
-          document.getElementById('loadingIndicator').classList.add('hidden');
-          document.getElementById('resultContainer').classList.remove('hidden');
-          document.getElementById('insightsContainer').classList.remove('hidden');
+      try{
+        const [scoreData, nftData, txData] = await Promise.all([
+          fetchScore(wallet, network),
+          fetchNFTs(wallet, network),
+          fetchTransactions(wallet, network)
+        ]);
 
-          const balance=result.data.items.reduce((a,b)=>a+(b.quote||0),0);
-          const score=Math.min(100, Math.max(5, Math.round(balance%100)));
-          document.getElementById('scoreValue').textContent=score;
-          document.getElementById('scoreDescription').textContent="Based on transactions, tokens, NFTs, and balance.";
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        document.getElementById('resultContainer').classList.remove('hidden');
+        document.getElementById('insightsContainer').classList.remove('hidden');
 
-          // Top tokens
-          let tokensHtml="<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
-          result.data.items.slice(0,5).forEach(t=>{
-            tokensHtml+=`<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;
+        // === Score Calculation ===
+        const totalBalance = scoreData.data.items.reduce((a,b)=>a+(b.quote||0),0);
+        const tokenCount = scoreData.data.items.filter(i=>i.balance>0).length;
+        const nftCount = nftData.data.items.filter(i=>i.type==='nft').length;
+        const txCount = txData.data.items.length;
+
+        const normalizedBalance = Math.min(30, (totalBalance/1000));
+        const normalizedTokens = Math.min(25, tokenCount);
+        const normalizedNFTs = Math.min(15, nftCount);
+        const normalizedTx = Math.min(30, txCount);
+
+        const score = Math.round(normalizedBalance + normalizedTokens + normalizedNFTs + normalizedTx);
+        document.getElementById('scoreValue').textContent = score;
+        document.getElementById('scoreDescription').textContent = "Based on transactions, tokens, NFTs, and balance.";
+
+        // === Top Tokens ===
+        let tokensHtml = "<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
+        scoreData.data.items.slice(0,5).forEach(t=>{
+          tokensHtml += `<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;
+        });
+        tokensHtml += "</ul>";
+        document.getElementById('topTokens').innerHTML = tokensHtml;
+
+        // === Transactions ===
+        let txHtml = "<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
+        const recentTx = txData.data.items.slice(0,5);
+        if(recentTx.length===0) txHtml += "<p>No recent transactions found.</p>";
+        recentTx.forEach(tx=>{
+          const timestamp = new Date(tx.block_signed_at).toLocaleString();
+          txHtml += `<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
+            <p><strong>Time:</strong> ${timestamp}</p>
+            <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
+          </div>`;
+        });
+        document.getElementById('recentTx').innerHTML = txHtml;
+
+        // === NFTs ===
+        let nftHtml = '';
+        nftData.data.items.filter(i=>i.type==='nft').forEach(item=>{
+          item.nft_data?.forEach(n=>{
+            nftHtml += `<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
+                          <img src="${n.external_data?.image||'https://via.placeholder.com/150'}" alt="${n.external_data?.name||'NFT'}" class="rounded-md w-full mb-2">
+                        </a>`;
           });
-          tokensHtml+="</ul>";
-          document.getElementById('topTokens').innerHTML=tokensHtml;
+        });
+        document.getElementById('nftContainer').innerHTML = nftHtml || "<p>No NFTs found.</p>";
 
-          // Transactions
-          const txList=txData.data.items.slice(0,5);
-          let txHtml="<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
-          if(txList.length===0) txHtml+="<p>No recent transactions found.</p>";
-          else txList.forEach(tx=>{
-            const timestamp=new Date(tx.block_signed_at).toLocaleString();
-            let tokenTransfersHtml='';
-            tx.log_events?.forEach(event=>{
-              if(event.decoded?.name==="Transfer"){
-                const tokenName=event.sender_contract_ticker_symbol;
-                const amount=(parseFloat(event.decoded.params[2].value)/Math.pow(10,event.sender_contract_decimals)).toFixed(4);
-                tokenTransfersHtml+=`<li>${amount} ${tokenName}</li>`;
-              }
-            });
-            txHtml+=`<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
-              <p><strong>Time:</strong> ${timestamp}</p>
-              <ul>${tokenTransfersHtml || '<li>No token transfers</li>'}</ul>
-              <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
-            </div>`;
-          });
-          document.getElementById('recentTx').innerHTML=txHtml;
+        document.getElementById('dapps').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
+        document.getElementById('staking').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
 
-          // NFTs
-          const nftItems=nftData.data.items.filter(i=>i.type==='nft');
-          let nftHtml='';
-          nftItems.forEach(item=>{
-            item.nft_data?.forEach(n=>{
-              nftHtml+=`<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
-                        <img src="${n.external_data?.image||'https://via.placeholder.com/150'}" alt="${n.external_data?.name||'NFT'}" class="rounded-md w-full mb-2">
-                      </a>`;
-            });
-          });
-          document.getElementById('nftContainer').innerHTML=nftHtml||'<p>No NFTs found.</p>';
-
-          document.getElementById('dapps').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
-          document.getElementById('staking').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
-
-        } catch(err){
-          console.error(err);
-          alert("Error fetching data. Check wallet address and network.");
-        }
-      });
+      } catch(err){
+        console.error(err);
+        alert("Error fetching data. Check wallet address and network.");
+        document.getElementById('loadingIndicator').classList.add('hidden');
+      }
     });
   </script>
 </body>
