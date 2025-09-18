@@ -18,22 +18,20 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col">
-
   <header class="gradient-bg text-white py-6">
     <div class="container mx-auto px-4 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-3">
         <img src="BASE.jpeg" alt="BasePulseScore Logo" class="w-8 h-8">
         <h1 class="text-xl font-bold">BasePulseScore</h1>
+        <span class="ml-4 text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center space-x-1">
+          <span>Powered by OnchainKit + Covalent</span>
+          <i data-feather="external-link" class="w-4 h-4"></i>
+        </span>
       </div>
-      <a href="https://onchainkit.xyz" target="_blank" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center space-x-1">
-        <span>Powered by OnchainKit + Covalent</span>
-        <i data-feather="external-link" class="w-4 h-4"></i>
-      </a>
     </div>
   </header>
 
   <main class="flex-grow container mx-auto px-4 py-8 max-w-md">
-    <!-- Score Form -->
     <div class="bg-white rounded-xl shadow-lg p-6">
       <h2 class="text-2xl font-bold text-gray-800 mb-2">Check Your On-Chain Score</h2>
       <p class="text-gray-600 mb-6">Paste your wallet address, choose a network, and get a detailed breakdown of on-chain activity.</p>
@@ -55,26 +53,19 @@
         <p id="errorMessage" class="text-red-500 text-sm mt-2 hidden">Please enter a valid wallet address</p>
       </form>
 
-      <!-- Loading -->
       <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
         <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <p class="text-gray-600">Fetching your score...</p>
       </div>
 
-      <!-- Result -->
-      <div id="resultContainer" class="hidden">
-        <div class="text-center mb-6">
-          <div id="scoreCircle" class="score-circle gradient-bg text-white">
-            <span id="scoreValue">0</span>
-          </div>
+      <div id="resultContainer" class="hidden text-center mb-6">
+        <div id="scoreCircle" class="score-circle gradient-bg text-white">
+          <span id="scoreValue">0</span>
         </div>
-        <div class="text-center">
-          <h3 class="text-xl font-semibold text-gray-800 mb-2">Your On-Chain Score</h3>
-          <p id="scoreDescription" class="text-gray-600">Calculated from your on-chain activity</p>
-        </div>
+        <h3 class="text-xl font-semibold text-gray-800 mt-4 mb-2">Your On-Chain Score</h3>
+        <p id="scoreDescription" class="text-gray-600">Calculated from your on-chain activity</p>
       </div>
 
-      <!-- Insights -->
       <div id="insightsContainer" class="mt-8 hidden space-y-6">
         <div class="bg-white rounded-xl shadow-lg p-6">
           <h3 class="text-lg font-semibold text-gray-800 mb-4">Detailed Insights</h3>
@@ -86,7 +77,6 @@
         </div>
       </div>
 
-      <!-- How scores are calculated -->
       <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
         <p class="text-gray-600 mb-4">Scores are normalized between <strong>0–100</strong> based on:</p>
@@ -99,7 +89,6 @@
         <p class="text-gray-600">Additional insights: token balances, recent transactions, dApp interactions, staking data, and NFT links.</p>
       </div>
 
-      <!-- Support -->
       <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Support this project</h3>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -109,7 +98,6 @@
         </div>
       </div>
 
-      <!-- Twitter -->
       <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
         <h3 class="text-lg font-semibold text-gray-800 mb-4">Follow me on Twitter</h3>
         <a href="https://x.com/marckellinfo" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm inline-flex items-center">
@@ -117,24 +105,23 @@
           <span>@marckellinfo</span>
         </a>
       </div>
-
     </div>
   </main>
 
-  <!-- Footer -->
   <footer class="bg-gray-50 py-8">
     <div class="container mx-auto px-4 text-center text-gray-500 text-sm">
-      © 2025 BasePulseScore. Created by <a href="https://etherscan.io/address/marckell.base.eth" target="_blank" class="underline hover:text-gray-800">marckell.base.eth</a>
+      © 2025 BasePulseScore. Created by <a href="https://etherscan.io/address/marckell.base.eth" class="text-blue-600 hover:underline">marckell.base.eth</a>
     </div>
   </footer>
 
   <script>
     feather.replace();
-    const COVALENT_API_KEY = "cqt_rQ36QyRfV6Gtv8rPj8HQXfC3vTPT";
 
     function copyToClipboard(text){
       navigator.clipboard.writeText(text).then(()=>{ alert('Copied: ' + text); });
     }
+
+    const COVALENT_API_KEY = "cqt_rQ36QyRfV6Gtv8rPj8HQXfC3vTPT";
 
     function getChainId(network){
       switch(network){
@@ -151,99 +138,99 @@
     async function fetchScore(wallet, network){
       const chainId=getChainId(network);
       const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?key=${COVALENT_API_KEY}`);
-      return res.json();
+      return await res.json();
     }
 
     async function fetchNFTs(wallet, chainId){
       const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?nft=true&no-nft-fetch=false&key=${COVALENT_API_KEY}`);
-      return res.json();
+      return await res.json();
     }
 
     async function fetchTransactions(wallet, chainId){
       const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?key=${COVALENT_API_KEY}`);
-      return res.json();
+      return await res.json();
     }
 
-    document.getElementById('scoreForm').addEventListener('submit', async function(e){
-      e.preventDefault();
-      const wallet=document.getElementById('walletAddress').value.trim();
-      const network=document.getElementById('networkSelect').value;
-      if(!/^0x[a-fA-F0-9]{40}$/.test(wallet)){
-        document.getElementById('errorMessage').classList.remove('hidden');
-        return;
-      }
-      document.getElementById('errorMessage').classList.add('hidden');
-      document.getElementById('loadingIndicator').classList.remove('hidden');
-      document.getElementById('resultContainer').classList.add('hidden');
-      document.getElementById('insightsContainer').classList.add('hidden');
+    document.addEventListener('DOMContentLoaded', () => {
+      const form=document.getElementById('scoreForm');
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const wallet=document.getElementById('walletAddress').value.trim();
+        const network=document.getElementById('networkSelect').value;
+        if(!/^0x[a-fA-F0-9]{40}$/.test(wallet)){
+          document.getElementById('errorMessage').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('errorMessage').classList.add('hidden');
+        document.getElementById('loadingIndicator').classList.remove('hidden');
+        document.getElementById('resultContainer').classList.add('hidden');
+        document.getElementById('insightsContainer').classList.add('hidden');
 
-      try{
-        const chainId=getChainId(network);
-        const [scoreData,nftData,txData] = await Promise.all([
-          fetchScore(wallet, network),
-          fetchNFTs(wallet, chainId),
-          fetchTransactions(wallet, chainId)
-        ]);
+        try{
+          const chainId=getChainId(network);
+          const result=await fetchScore(wallet, network);
+          const nftData=await fetchNFTs(wallet, chainId);
+          const txData=await fetchTransactions(wallet, chainId);
 
-        document.getElementById('loadingIndicator').classList.add('hidden');
-        document.getElementById('resultContainer').classList.remove('hidden');
-        document.getElementById('insightsContainer').classList.remove('hidden');
+          document.getElementById('loadingIndicator').classList.add('hidden');
+          document.getElementById('resultContainer').classList.remove('hidden');
+          document.getElementById('insightsContainer').classList.remove('hidden');
 
-        const balance = scoreData.data.items.reduce((a,b)=>a+(b.quote||0),0);
-        const score = Math.min(100, Math.max(5, Math.round(balance%100)));
-        document.getElementById('scoreValue').textContent = score;
-        document.getElementById('scoreDescription').textContent = "Based on transactions, tokens, NFTs, and balance.";
+          const balance=result.data.items.reduce((a,b)=>a+(b.quote||0),0);
+          const score=Math.min(100, Math.max(5, Math.round(balance%100)));
+          document.getElementById('scoreValue').textContent=score;
+          document.getElementById('scoreDescription').textContent="Based on transactions, tokens, NFTs, and balance.";
 
-        // Top tokens
-        let tokensHtml = "<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
-        scoreData.data.items.slice(0,5).forEach(t=>{
-          tokensHtml+=`<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;
-        });
-        tokensHtml+="</ul>";
-        document.getElementById('topTokens').innerHTML = tokensHtml;
-
-        // Transactions
-        const txList = txData.data.items.slice(0,5);
-        let txHtml="<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
-        if(txList.length===0) txHtml+="<p>No recent transactions found.</p>";
-        else txList.forEach(tx=>{
-          const timestamp = new Date(tx.block_signed_at).toLocaleString();
-          let tokenTransfersHtml='';
-          tx.log_events?.forEach(event=>{
-            if(event.decoded?.name==="Transfer"){
-              const tokenName = event.sender_contract_ticker_symbol;
-              const amount = (parseFloat(event.decoded.params[2].value)/Math.pow(10,event.sender_contract_decimals)).toFixed(4);
-              tokenTransfersHtml+=`<li>${amount} ${tokenName}</li>`;
-            }
+          // Top tokens
+          let tokensHtml="<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
+          result.data.items.slice(0,5).forEach(t=>{
+            tokensHtml+=`<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;
           });
-          txHtml+=`<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
-            <p><strong>Time:</strong> ${timestamp}</p>
-            <ul>${tokenTransfersHtml || '<li>No token transfers</li>'}</ul>
-            <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
-          </div>`;
-        });
-        document.getElementById('recentTx').innerHTML = txHtml;
+          tokensHtml+="</ul>";
+          document.getElementById('topTokens').innerHTML=tokensHtml;
 
-        // NFTs
-        const nftItems = nftData.data.items.filter(i=>i.type==='nft');
-        let nftHtml='';
-        nftItems.forEach(item=>{
-          item.nft_data?.forEach(n=>{
-            nftHtml+=`<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
+          // Transactions
+          const txList=txData.data.items.slice(0,5);
+          let txHtml="<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
+          if(txList.length===0) txHtml+="<p>No recent transactions found.</p>";
+          else txList.forEach(tx=>{
+            const timestamp=new Date(tx.block_signed_at).toLocaleString();
+            let tokenTransfersHtml='';
+            tx.log_events?.forEach(event=>{
+              if(event.decoded?.name==="Transfer"){
+                const tokenName=event.sender_contract_ticker_symbol;
+                const amount=(parseFloat(event.decoded.params[2].value)/Math.pow(10,event.sender_contract_decimals)).toFixed(4);
+                tokenTransfersHtml+=`<li>${amount} ${tokenName}</li>`;
+              }
+            });
+            txHtml+=`<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
+              <p><strong>Time:</strong> ${timestamp}</p>
+              <ul>${tokenTransfersHtml || '<li>No token transfers</li>'}</ul>
+              <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
+            </div>`;
+          });
+          document.getElementById('recentTx').innerHTML=txHtml;
+
+          // NFTs
+          const nftItems=nftData.data.items.filter(i=>i.type==='nft');
+          let nftHtml='';
+          nftItems.forEach(item=>{
+            item.nft_data?.forEach(n=>{
+              nftHtml+=`<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
                         <img src="${n.external_data?.image||'https://via.placeholder.com/150'}" alt="${n.external_data?.name||'NFT'}" class="rounded-md w-full mb-2">
                       </a>`;
+            });
           });
-        });
-        document.getElementById('nftContainer').innerHTML = nftHtml || '<p>No NFTs found.</p>';
+          document.getElementById('nftContainer').innerHTML=nftHtml||'<p>No NFTs found.</p>';
 
-        document.getElementById('dapps').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
-        document.getElementById('staking').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
+          document.getElementById('dapps').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
+          document.getElementById('staking').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
 
-      } catch(err){
-        console.error(err);
-        alert("Error fetching data. Check wallet address and network.");
-        document.getElementById('loadingIndicator').classList.add('hidden');
-      }
+        } catch(err){
+          console.error(err);
+          alert("Error fetching data. Check wallet address and network.");
+        }
+      });
     });
   </script>
 </body>
