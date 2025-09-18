@@ -1,0 +1,285 @@
+
+
+Build me a professional website called **Base Network On-Chain Score Checker**.
+
+The purpose of this site is to let users paste their Base wallet address and instantly check their **on-chain score**. This score represents their activity on the Base network, including transactions, NFT holdings, and DeFi participation.
+
+The website must have:
+
+* A **modern, minimal, and responsive UI using TailwindCSS**.
+* A header with the project logo and text “Powered by OnchainKit”.
+* A form for users to paste their wallet address and click “Check Score”.
+* A **loading spinner** that appears while fetching the score.
+* A result display showing:
+
+  * A large **animated circle with the score** inside.
+  * A score description depending on the result.
+* A section explaining **What is an On-Chain Score?**
+* A footer with:
+
+  * Credit: “Created by marckell.base.eth” linked to `https://app.ens.domains/marckell.base.eth`.
+  * A verified note: “Verified on Base Network”.
+  * A professional **Twitter link** to `https://x.com/marckellinfo` with a Twitter icon.
+  * A **Donation Section** with 3 copy-to-clipboard buttons for these wallet addresses:
+
+    * **EVM:** `0x667756929203c71f66cb33e9e69649f3c7feeae1`
+    * **Solana:** `GmvZtx5jwvcRPdkQSn4FTNpCLG1W2HSkyUvfyZ2jkT4x`
+    * **Ton:** `UQAt4u1-eqTizm_sYqS_WRn507BfxWaYGA2-Zo8DMdfeJgYS`
+
+⚡ Important: Use this **HTML structure** as the base and add the functionality. Replace the mock `fetchScore` function with an actual OnchainKit integration if possible, otherwise simulate the score for demo purposes.
+
+Here’s the full HTML to follow:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base Network On-Chain Score Checker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #0052ff 0%, #00d4ff 100%);
+        }
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 auto;
+            box-shadow: 0 10px 25px rgba(0, 82, 255, 0.2);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="gradient-bg text-white py-6">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="#0052FF"/>
+                        <path d="M16.0002 6L8.00024 16L16.0002 26L24.0002 16L16.0002 6ZM16.0002 10.6L19.2002 15H12.8002L16.0002 10.6Z" fill="white"/>
+                    </svg>
+                    <h1 class="text-xl font-bold">Base Score</h1>
+                </div>
+                <a href="https://onchainkit.xyz" target="_blank" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center">
+                    <span>Powered by OnchainKit</span>
+                    <i data-feather="external-link" class="w-4 h-4 ml-1"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow container mx-auto px-4 py-8 max-w-md">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">Check Your On-Chain Score</h2>
+            <p class="text-gray-600 mb-6">Paste your Base wallet address to see your score instantly.</p>
+            
+            <form id="scoreForm" class="mb-8">
+                <div class="relative">
+                    <input 
+                        type="text" 
+                        id="walletAddress" 
+                        placeholder="0x..." 
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
+                        required
+                    >
+                    <button 
+                        type="submit" 
+                        id="checkButton"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition"
+                    >
+                        Check Score
+                    </button>
+                </div>
+                <p id="errorMessage" class="text-red-500 text-sm mt-2 hidden">Please enter a valid Base wallet address</p>
+            </form>
+
+            <div id="resultContainer" class="hidden">
+                <div class="text-center mb-6">
+                    <div id="scoreCircle" class="score-circle gradient-bg text-white">
+                        <span id="scoreValue">0</span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Your On-Chain Score</h3>
+                    <p id="scoreDescription" class="text-gray-600">Calculated based on your Base network activity</p>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
+                <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p class="text-gray-600">Fetching your score...</p>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">What is an On-Chain Score?</h3>
+            <p class="text-gray-600 mb-4">
+                Your score is calculated based on various factors including transaction history, NFT holdings, DeFi activity, and more on the Base network.
+            </p>
+            <div class="flex items-center text-blue-600">
+                <i data-feather="info" class="w-5 h-5 mr-2"></i>
+                <span class="text-sm">Higher scores indicate more active and valuable on-chain activity</span>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-50 py-8">
+        <div class="container mx-auto px-4">
+            <div class="max-w-md mx-auto space-y-6">
+                <div class="text-center">
+                    <p class="text-gray-500 text-sm mb-2">© 2023 Base Score Checker. Not affiliated with Coinbase or Base.</p>
+                    <div class="flex items-center justify-center space-x-4">
+                        <a href="https://app.ens.domains/marckell.base.eth" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                            <span>Created by marckell.base.eth</span>
+                            <i data-feather="external-link" class="w-3 h-3 ml-1"></i>
+                        </a>
+                        <span class="text-gray-400">|</span>
+                        <span class="text-gray-500 text-sm">Verified on Base Network</span>
+                    </div>
+                    <a href="https://x.com/marckellinfo" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-flex items-center">
+                        <i data-feather="twitter" class="w-4 h-4 mr-1"></i>
+                        <span>Connect on Twitter</span>
+                    </a>
+                </div>
+
+                <div class="border-t border-gray-200 pt-6">
+                    <h4 class="text-sm font-medium text-gray-700 mb-3 text-center">Support this project:</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div class="relative">
+                            <button 
+                                onclick="copyToClipboard('0x667756929203c71f66cb33e9e69649f3c7feeae1')"
+                                class="w-full text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between transition"
+                                title="Click to copy donation address"
+                            >
+                                <span>EVM</span>
+                                <i data-feather="copy" class="w-3 h-3 ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button 
+                                onclick="copyToClipboard('GmvZtx5jwvcRPdkQSn4FTNpCLG1W2HSkyUvfyZ2jkT4x')"
+                                class="w-full text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between transition"
+                                title="Click to copy donation address"
+                            >
+                                <span>Solana</span>
+                                <i data-feather="copy" class="w-3 h-3 ml-2"></i>
+                            </button>
+                        </div>
+                        <div class="relative">
+                            <button 
+                                onclick="copyToClipboard('UQAt4u1-eqTizm_sYqS_WRn507BfxWaYGA2-Zo8DMdfeJgYS')"
+                                class="w-full text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between transition"
+                                title="Click to copy donation address"
+                            >
+                                <span>Ton</span>
+                                <i data-feather="copy" class="w-3 h-3 ml-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize feather icons
+        feather.replace();
+
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Copied to clipboard:', text);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+        
+        // Form submission handler
+        document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const walletAddress = document.getElementById('walletAddress').value.trim();
+            const errorMessage = document.getElementById('errorMessage');
+            const resultContainer = document.getElementById('resultContainer');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            
+            if (!walletAddress || !walletAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
+                errorMessage.classList.remove('hidden');
+                return;
+            }
+            
+            errorMessage.classList.add('hidden');
+            resultContainer.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+            
+            try {
+                const score = await fetchScore(walletAddress);
+                document.getElementById('scoreValue').textContent = score;
+                document.getElementById('scoreDescription').textContent = getScoreDescription(score);
+                animateScore(score);
+                loadingIndicator.classList.add('hidden');
+                resultContainer.classList.remove('hidden');
+            } catch (error) {
+                console.error('Error fetching score:', error);
+                errorMessage.textContent = 'Failed to fetch score. Please try again.';
+                errorMessage.classList.remove('hidden');
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+        
+        async function fetchScore(walletAddress) {
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            const hash = Array.from(walletAddress).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+            return Math.min(100, Math.max(10, (hash % 90) + 10));
+        }
+        
+        function getScoreDescription(score) {
+            if (score < 30) return 'New to Base network. Keep exploring!';
+            if (score < 60) return 'Active user with growing on-chain presence';
+            if (score < 80) return 'Highly engaged with Base ecosystem';
+            return 'Top-tier Base network participant';
+        }
+        
+        function animateScore(finalScore) {
+            const scoreElement = document.getElementById('scoreValue');
+            let currentScore = 0;
+            const increment = finalScore / 20;
+            
+            const timer = setInterval(() => {
+                currentScore += increment;
+                if (currentScore >= finalScore) {
+                    clearInterval(timer);
+                    currentScore = finalScore;
+                }
+                scoreElement.textContent = Math.round(currentScore);
+            }, 50);
+        }
+    </script>
+</body
+>
+</html>
+```
+instead of connect on Twitter change it into follow on Twitter or just display my Twitter profile with name on it when they click it, it will direct them to my Twitter profile account 
+also with the support the project add the logo of each network and show the copy paste logo in the right side so they know, not just plain
+maybe just remove the LOGO if you can't put the real logo 
