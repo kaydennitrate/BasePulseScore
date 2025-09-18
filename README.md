@@ -1,11 +1,13 @@
+![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)
+
+# BasePulseScore
+
+Check your Base Network on-chain score in seconds. BasePulseScore analyzes wallet activity, NFTs, and DeFi interactions to show your presence on Base.
+
+
 # BasePulseScore
 
 **BasePulseScore** — a simple, mobile-first on-chain activity checker for the **Base Network**. Instantly calculate and visualize a wallet's on-chain score based on transaction activity, NFT holdings, and DeFi interactions. Built as a static site (HTML/CSS/JS) with TailwindCSS and feather icons; integrates with OnchainKit when ready.
-
----
-
-## Live Demo
-(Deploy to Vercel or your preferred static host. Example: `https://your-project.vercel.app`)
 
 ---
 
