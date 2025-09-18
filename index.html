@@ -1,249 +1,200 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base Network On-Chain Score Checker</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-        .gradient-bg {
-            background: linear-gradient(135deg, #0052ff 0%, #00d4ff 100%);
-        }
-        .score-circle {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0 auto;
-            box-shadow: 0 10px 25px rgba(0, 82, 255, 0.2);
-        }
-        .pulse {
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            50% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.8; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BasePulseScore | Multi-Network On-Chain Score Checker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    .gradient-bg { background: linear-gradient(135deg, #0052ff 0%, #00d4ff 100%); }
+    .score-circle {
+      width: 120px; height: 120px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; font-weight: 700; margin: 0 auto;
+      box-shadow: 0 10px 25px rgba(0, 82, 255, 0.2);
+    }
+  </style>
 </head>
 <body class="min-h-screen flex flex-col">
-    <header class="gradient-bg text-white py-6">
-        <div class="container mx-auto px-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-2">
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 32C24.8366 32 32 24.8366 32 16C32 7.16344 24.8366 0 16 0C7.16344 0 0 7.16344 0 16C0 24.8366 7.16344 32 16 32Z" fill="#0052FF"/>
-                        <path d="M16.0002 6L8.00024 16L16.0002 26L24.0002 16L16.0002 6ZM16.0002 10.6L19.2002 15H12.8002L16.0002 10.6Z" fill="white"/>
-                    </svg>
-                    <h1 class="text-xl font-bold">Base Score</h1>
-                </div>
-                <a href="https://onchainkit.xyz" target="_blank" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center">
-                    <span>Powered by Covalent API</span>
-                    <i data-feather="external-link" class="w-4 h-4 ml-1"></i>
-                </a>
-            </div>
+  <!-- Header -->
+  <header class="gradient-bg text-white py-6">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+      <div class="flex items-center space-x-2">
+        <svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="16" fill="#0052FF"/>
+          <path d="M16 6L8 16l8 10 8-10-8-10z" fill="white"/>
+        </svg>
+        <h1 class="text-xl font-bold">BasePulseScore</h1>
+      </div>
+      <a href="https://onchainkit.xyz" target="_blank" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1 rounded-full flex items-center">
+        <span>Powered by OnchainKit + Covalent</span>
+        <i data-feather="external-link" class="w-4 h-4 ml-1"></i>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="flex-grow container mx-auto px-4 py-8 max-w-md">
+    <div class="bg-white rounded-xl shadow-lg p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">Check Your On-Chain Score</h2>
+      <p class="text-gray-600 mb-6">Paste your wallet address and choose a network.</p>
+
+      <!-- Form -->
+      <form id="scoreForm" class="mb-8 space-y-4">
+        <div class="relative">
+          <label for="networkSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Network</label>
+          <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+            <select id="networkSelect" class="flex-1 px-4 py-3 outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="8453" data-icon="https://cryptologos.cc/logos/base-base-logo.png?v=029">Base</option>
+              <option value="1" data-icon="https://cryptologos.cc/logos/ethereum-eth-logo.png?v=029">Ethereum</option>
+              <option value="137" data-icon="https://cryptologos.cc/logos/polygon-matic-logo.png?v=029">Polygon</option>
+              <option value="56" data-icon="https://cryptologos.cc/logos/binance-coin-bnb-logo.png?v=029">BNB Chain</option>
+              <option value="42161" data-icon="https://cryptologos.cc/logos/arbitrum-arb-logo.png?v=029">Arbitrum</option>
+              <option value="10" data-icon="https://cryptologos.cc/logos/optimism-ethereum-op-logo.png?v=029">Optimism</option>
+            </select>
+            <img id="networkIcon" src="https://cryptologos.cc/logos/base-base-logo.png?v=029" alt="Network Logo" class="w-8 h-8 mx-2">
+          </div>
         </div>
-    </header>
-
-    <main class="flex-grow container mx-auto px-4 py-8 max-w-md">
-        <div class="bg-white rounded-xl shadow-lg p-6">
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">Check Your On-Chain Score</h2>
-            <p class="text-gray-600 mb-6">Paste your Base wallet address to see your score instantly.</p>
-            
-            <form id="scoreForm" class="mb-8">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        id="walletAddress" 
-                        placeholder="0x..." 
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-                        required
-                    >
-                    <button 
-                        type="submit" 
-                        id="checkButton"
-                        class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm font-medium transition"
-                    >
-                        Check Score
-                    </button>
-                </div>
-                <p id="errorMessage" class="text-red-500 text-sm mt-2 hidden">Please enter a valid Base wallet address</p>
-            </form>
-
-            <div id="resultContainer" class="hidden">
-                <div class="text-center mb-6">
-                    <div id="scoreCircle" class="score-circle gradient-bg text-white">
-                        <span id="scoreValue">0</span>
-                    </div>
-                </div>
-                <div class="text-center mb-6">
-                    <h3 class="text-xl font-semibold text-gray-800 mb-2">Your On-Chain Score</h3>
-                    <p id="scoreDescription" class="text-gray-600">Calculated based on your Base network activity</p>
-                </div>
-
-                <!-- Styled Breakdown Section -->
-                <div class="bg-gray-50 rounded-lg p-4 shadow-inner">
-                    <h4 class="text-md font-semibold text-gray-700 mb-3">Breakdown</h4>
-                    <ul class="space-y-3 text-sm text-gray-700">
-                        <li class="flex items-center">
-                            <i data-feather="activity" class="w-4 h-4 text-blue-600 mr-2"></i>
-                            <span><strong>Transactions:</strong> <span id="txCount">0</span></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i data-feather="layers" class="w-4 h-4 text-green-600 mr-2"></i>
-                            <span><strong>Tokens Held:</strong> <span id="tokenCount">0</span></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i data-feather="dollar-sign" class="w-4 h-4 text-yellow-600 mr-2"></i>
-                            <span><strong>Total USD Value:</strong> $<span id="balanceUSD">0</span></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i data-feather="image" class="w-4 h-4 text-purple-600 mr-2"></i>
-                            <span><strong>NFTs Estimated:</strong> <span id="nftCount">0</span></span>
-                        </li>
-                        <li class="flex items-center">
-                            <i data-feather="trending-up" class="w-4 h-4 text-red-600 mr-2"></i>
-                            <span><strong>DeFi Activity:</strong> <span id="defiCount">0</span></span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
-                <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-gray-600">Fetching your score...</p>
-            </div>
+        <div class="relative">
+          <input type="text" id="walletAddress" placeholder="0x..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" required>
+          <button type="submit" id="checkButton" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md text-sm">Check</button>
         </div>
+        <p id="errorMessage" class="text-red-500 text-sm hidden">Please enter a valid wallet address</p>
+      </form>
 
-        <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">What is an On-Chain Score?</h3>
-            <p class="text-gray-600 mb-4">
-                Your score is calculated based on factors including transaction history, token holdings, wallet balance, and estimated NFT/DeFi activity on the Base network.
-            </p>
-            <div class="flex items-center text-blue-600">
-                <i data-feather="info" class="w-5 h-5 mr-2"></i>
-                <span class="text-sm">Higher scores indicate more active and valuable on-chain presence.</span>
-            </div>
+      <!-- Results -->
+      <div id="resultContainer" class="hidden">
+        <div class="text-center mb-6">
+          <div id="scoreCircle" class="score-circle gradient-bg text-white">
+            <span id="scoreValue">0</span>
+          </div>
         </div>
-    </main>
-
-    <footer class="bg-gray-50 py-8">
-        <div class="container mx-auto px-4">
-            <div class="max-w-md mx-auto space-y-6">
-                <div class="text-center">
-                    <p class="text-gray-500 text-sm mb-2">© 2025 BasePulseScore. Created by marckell.base.eth</p>
-                    <a href="https://x.com/marckellinfo" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm mt-2 inline-flex items-center">
-                        <i data-feather="twitter" class="w-4 h-4 mr-1"></i>
-                        <span>Connect on Twitter</span>
-                    </a>
-                </div>
-            </div>
+        <div class="text-center">
+          <h3 class="text-xl font-semibold text-gray-800 mb-2">Your On-Chain Score</h3>
+          <p id="scoreDescription" class="text-gray-600"></p>
+          <p class="text-sm text-gray-500 mt-2" id="scoreBreakdown"></p>
         </div>
-    </footer>
+      </div>
 
-    <script>
-        feather.replace();
+      <!-- Loading -->
+      <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-gray-600">Fetching your score...</p>
+      </div>
+    </div>
 
-        const API_KEY = "cqt_rQ36QyRfV6Gtv8rPj8HQXfC3vTPT";
+    <!-- Explanation -->
+    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
+      <p class="text-gray-600 text-sm">
+        Your score considers <b>transaction history (40%)</b>, <b>unique tokens (25%)</b>, 
+        <b>USD balance (20%)</b>, and <b>NFT holdings (15%)</b>.
+        Data is pulled live from <b>Covalent API</b>. Scores are normalized between <b>0–100</b>.
+      </p>
+    </div>
+  </main>
 
-        async function fetchScore(walletAddress) {
-            try {
-                const url = `https://api.covalenthq.com/v1/8453/address/${walletAddress}/balances_v2/?quote-currency=USD&format=JSON&page-size=9999&key=${API_KEY}`;
-                const response = await fetch(url);
-                const data = await response.json();
-                if (!data || !data.data) throw new Error("No data from API");
+  <!-- Footer -->
+  <footer class="bg-gray-50 py-8">
+    <div class="container mx-auto px-4 max-w-md text-center space-y-6">
+      <p class="text-gray-500 text-sm mb-2">© 2025 BasePulseScore. Created by marckell.base.eth</p>
 
-                const tokens = data.data.items.length;
-                const balanceUSD = data.data.items.reduce((sum, t) => sum + (t.quote || 0), 0);
+      <!-- Twitter -->
+      <a href="https://x.com/marckellinfo" target="_blank" class="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 text-sm">
+        <img src="https://unavatar.io/twitter/marckellinfo" alt="@marckellinfo" class="w-6 h-6 rounded-full border border-gray-300">
+        <span>@marckellinfo</span>
+      </a>
 
-                const txUrl = `https://api.covalenthq.com/v1/8453/address/${walletAddress}/transactions_v2/?page-size=1&key=${API_KEY}`;
-                const txResponse = await fetch(txUrl);
-                const txData = await txResponse.json();
-                const txCount = txData?.data?.pagination?.total_count || 0;
+      <!-- Donation -->
+      <div class="border-t border-gray-200 pt-6">
+        <h4 class="text-sm font-medium text-gray-700 mb-3">Support this project:</h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="copyToClipboard('0x667756929203c71f66cb33e9e69649f3c7feeae1')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between w-full">
+            <span>EVM</span><i data-feather="copy" class="w-3 h-3 ml-2"></i>
+          </button>
+          <button onclick="copyToClipboard('GmvZtx5jwvcRPdkQSn4FTNpCLG1W2HSkyUvfyZ2jkT4x')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between w-full">
+            <span>Solana</span><i data-feather="copy" class="w-3 h-3 ml-2"></i>
+          </button>
+          <button onclick="copyToClipboard('UQAt4u1-eqTizm_sYqS_WRn507BfxWaYGA2-Zo8DMdfeJgYS')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between w-full">
+            <span>Ton</span><i data-feather="copy" class="w-3 h-3 ml-2"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
 
-                const nftCount = tokens > 0 ? Math.floor(tokens / 5) : 0;
-                const defiCount = tokens > 0 ? Math.floor(tokens / 10) : 0;
+  <!-- Scripts -->
+  <script>
+    feather.replace();
+    const API_KEY = "cqt_rQ36QyRfV6Gtv8rPj8HQXfC3vTPT";
 
-                let rawScore = (txCount * 0.4) + (tokens * 0.3) + ((balanceUSD / 100) * 0.3);
-                let score = Math.min(100, Math.max(5, Math.round(rawScore)));
+    // Copy donation
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => alert("Copied: " + text));
+    }
 
-                return { score, txCount, tokens, balanceUSD, nftCount, defiCount };
-            } catch (err) {
-                console.error("Error fetching score:", err);
-                return { score: 0, txCount: 0, tokens: 0, balanceUSD: 0, nftCount: 0, defiCount: 0 };
-            }
-        }
+    // Update network logo
+    document.getElementById('networkSelect').addEventListener('change', function() {
+      const selected = this.options[this.selectedIndex];
+      const icon = selected.getAttribute('data-icon');
+      document.getElementById('networkIcon').src = icon;
+    });
 
-        function getScoreDescription(score) {
-            if (score < 30) return 'New to Base network. Keep exploring!';
-            if (score < 60) return 'Active user with growing on-chain presence.';
-            if (score < 80) return 'Highly engaged with Base ecosystem.';
-            return 'Top-tier Base network participant.';
-        }
+    // Submit form
+    document.getElementById('scoreForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const wallet = document.getElementById('walletAddress').value.trim();
+      const chainId = document.getElementById('networkSelect').value;
+      if (!wallet.match(/^0x[a-fA-F0-9]{40}$/)) {
+        document.getElementById('errorMessage').classList.remove('hidden');
+        return;
+      }
+      document.getElementById('errorMessage').classList.add('hidden');
+      document.getElementById('resultContainer').classList.add('hidden');
+      document.getElementById('loadingIndicator').classList.remove('hidden');
+      try {
+        const data = await fetchScore(wallet, chainId);
+        document.getElementById('scoreValue').textContent = data.score;
+        document.getElementById('scoreDescription').textContent = getScoreDescription(data.score);
+        document.getElementById('scoreBreakdown').textContent = 
+          `Tx: ${data.txCount}, Tokens: ${data.tokens}, Balance: $${data.balanceUSD.toFixed(2)}, NFTs: ${data.nftCount}`;
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        document.getElementById('resultContainer').classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        document.getElementById('loadingIndicator').classList.add('hidden');
+        document.getElementById('errorMessage').textContent = 'Error fetching score.';
+        document.getElementById('errorMessage').classList.remove('hidden');
+      }
+    });
 
-        function animateScore(finalScore) {
-            const scoreElement = document.getElementById('scoreValue');
-            let currentScore = 0;
-            const increment = finalScore / 20;
-            const timer = setInterval(() => {
-                currentScore += increment;
-                if (currentScore >= finalScore) {
-                    clearInterval(timer);
-                    currentScore = finalScore;
-                }
-                scoreElement.textContent = Math.round(currentScore);
-            }, 50);
-        }
+    // Fetch score
+    async function fetchScore(wallet, chainId) {
+      const url = `https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?quote-currency=USD&format=JSON&page-size=9999&key=${API_KEY}`;
+      const resp = await fetch(url);
+      const data = await resp.json();
+      if (!data || !data.data) throw new Error("No data");
+      const tokens = data.data.items.length;
+      const balanceUSD = data.data.items.reduce((s,t)=>s+(t.quote||0),0);
+      const txUrl = `https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?page-size=1&key=${API_KEY}`;
+      const txResp = await fetch(txUrl);
+      const txData = await txResp.json();
+      const txCount = txData?.data?.pagination?.total_count || 0;
+      const nftCount = tokens > 0 ? Math.floor(tokens/5) : 0;
+      let rawScore = (txCount/500*40)+(tokens/20*25)+((balanceUSD/1000)*20)+(nftCount/50*15);
+      let score = Math.min(100, Math.max(0, Math.round(rawScore)));
+      return {score, txCount, tokens, balanceUSD, nftCount};
+    }
 
-        document.getElementById('scoreForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const walletAddress = document.getElementById('walletAddress').value.trim();
-            const errorMessage = document.getElementById('errorMessage');
-            const resultContainer = document.getElementById('resultContainer');
-            const loadingIndicator = document.getElementById('loadingIndicator');
-
-            if (!walletAddress.match(/^0x[a-fA-F0-9]{40}$/)) {
-                errorMessage.classList.remove('hidden');
-                return;
-            }
-
-            errorMessage.classList.add('hidden');
-            resultContainer.classList.add('hidden');
-            loadingIndicator.classList.remove('hidden');
-
-            try {
-                const data = await fetchScore(walletAddress);
-
-                document.getElementById('scoreValue').textContent = data.score;
-                document.getElementById('scoreDescription').textContent = getScoreDescription(data.score);
-
-                document.getElementById('txCount').textContent = data.txCount;
-                document.getElementById('tokenCount').textContent = data.tokens;
-                document.getElementById('balanceUSD').textContent = data.balanceUSD.toFixed(2);
-                document.getElementById('nftCount').textContent = data.nftCount;
-                document.getElementById('defiCount').textContent = data.defiCount;
-
-                animateScore(data.score);
-                loadingIndicator.classList.add('hidden');
-                resultContainer.classList.remove('hidden');
-            } catch (error) {
-                console.error('Error:', error);
-                errorMessage.textContent = 'Failed to fetch score. Please try again.';
-                errorMessage.classList.remove('hidden');
-                loadingIndicator.classList.add('hidden');
-            }
-        });
-    </script>
+    function getScoreDescription(score) {
+      if (score < 20) return "New or inactive wallet";
+      if (score < 50) return "Active user, growing presence";
+      if (score < 80) return "Engaged with ecosystem";
+      return "Top-tier participant";
+    }
+  </script>
 </body>
 </html>
