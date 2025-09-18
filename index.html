@@ -82,20 +82,6 @@
     </div>
 
     <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
-      <p class="text-gray-600 mb-4">
-        Scores are normalized between <strong>0–100</strong> based on:
-      </p>
-      <ul class="list-disc ml-6 text-gray-700 mb-3">
-        <li><strong>Transactions</strong> (40%)</li>
-        <li><strong>Unique tokens</strong> (25%)</li>
-        <li><strong>USD balance</strong> (20%)</li>
-        <li><strong>NFT holdings</strong> (15%)</li>
-      </ul>
-      <p class="text-gray-600">Additional insights: token balances, recent transactions, dApp interactions, staking data, and NFT links.</p>
-    </div>
-
-    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
       <h3 class="text-lg font-semibold text-gray-800 mb-4">Support this project</h3>
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <button onclick="copyToClipboard('0x667756929203c71f66cb33e9e69649f3c7feeae1')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between">EVM<i data-feather="copy" class="w-3 h-3 ml-2"></i></button>
@@ -182,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('resultContainer').classList.remove('hidden');
       document.getElementById('insightsContainer').classList.remove('hidden');
 
-      // Calculate score
+      // Score calculation
       const balance = result.data.items.reduce((a,b)=>a+(b.quote||0),0);
       const tokenCount = result.data.items.length;
       const nftCount = nftData.data.items.filter(i=>i.type==='nft').length;
@@ -198,11 +184,11 @@ document.addEventListener('DOMContentLoaded', () => {
       tokensHtml += "</ul>";
       document.getElementById('topTokens').innerHTML = tokensHtml;
 
-      // Recent transactions (limit 50, unique hashes)
+      // Recent transactions (limit 25, unique hashes)
       const txList = [];
       const seenHashes = new Set();
       for(let tx of txData.data.items){
-        if(seenHashes.size>=50) break;
+        if(seenHashes.size>=25) break;
         if(seenHashes.has(tx.tx_hash)) continue;
         seenHashes.add(tx.tx_hash);
         txList.push(tx);
@@ -228,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       document.getElementById('recentTx').innerHTML = txHtml;
 
-      // NFTs with links
+      // NFTs with links (first 20)
       const nftItems = nftData.data.items.filter(i=>i.type==='nft');
       let nftHtml='';
       nftItems.slice(0,20).forEach(item=>{
@@ -246,10 +232,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     } catch(err){
       console.error(err);
-      alert("Error fetching data. Check wallet address and network.");
+      alert("Error fetching data. Please check your wallet address and network.");
     }
   });
 });
 </script>
 </body>
-</html>
+          </html>
+          
