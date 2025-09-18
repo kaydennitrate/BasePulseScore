@@ -1,4 +1,9 @@
-![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)
+[![License: All Rights Reserved](https://img.shields.io/badge/License-All%20Rights%20Reserved-red.svg)](./LICENSE)
+
+# BasePulseScore
+
+Check your Base Network on-chain score in seconds. BasePulseScore analyzes wallet activity, NFTs, and DeFi interactions to show your presence on Base.
+
 
 # BasePulseScore
 
