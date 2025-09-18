@@ -56,6 +56,11 @@
         <p id="errorMessage" class="text-red-500 text-sm mt-2 hidden">Please enter a valid wallet address</p>
       </form>
 
+      <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
+        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-gray-600">Fetching your score...</p>
+      </div>
+
       <div id="resultContainer" class="hidden">
         <div class="text-center mb-6">
           <div id="scoreCircle" class="score-circle gradient-bg text-white">
@@ -68,45 +73,49 @@
         </div>
       </div>
 
-      <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-8">
-        <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-gray-600">Fetching your score...</p>
+      <div id="insightsContainer" class="mt-8 hidden space-y-6">
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Detailed Insights</h3>
+          <div id="topTokens" class="mb-4"></div>
+          <div id="recentTx" class="mb-4"></div>
+          <div id="dapps" class="mb-4"></div>
+          <div id="nftContainer" class="mb-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
+          <div id="staking" class="mb-4"></div>
+        </div>
       </div>
-    </div>
 
-    <div id="insightsContainer" class="mt-8 hidden space-y-6">
-      <div class="bg-white rounded-xl shadow-lg p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">Detailed Insights</h3>
-        <div id="topTokens" class="mb-4"></div>
-        <div id="recentTx" class="mb-4"></div>
-        <div id="dapps" class="mb-4"></div>
-        <div id="nftContainer" class="mb-4 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3"></div>
-        <div id="staking" class="mb-4"></div>
+      <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
+        <p class="text-gray-600 mb-4">
+          Scores are normalized between <strong>0–100</strong> based on:
+        </p>
+        <ul class="list-disc ml-6 text-gray-700 mb-3">
+          <li><strong>Transactions</strong> (40%)</li>
+          <li><strong>Unique tokens</strong> (25%)</li>
+          <li><strong>USD balance</strong> (20%)</li>
+          <li><strong>NFT holdings</strong> (15%)</li>
+        </ul>
+        <p class="text-gray-600">Additional insights: token balances, recent transactions, dApp interactions, staking data, and NFT links.</p>
       </div>
-    </div>
 
-    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-4">How Scores Are Calculated</h3>
-      <p class="text-gray-600 mb-4">
-        Scores are normalized between <strong>0–100</strong> based on:
-      </p>
-      <ul class="list-disc ml-6 text-gray-700 mb-3">
-        <li><strong>Transactions</strong> (40%)</li>
-        <li><strong>Unique tokens</strong> (25%)</li>
-        <li><strong>USD balance</strong> (20%)</li>
-        <li><strong>NFT holdings</strong> (15%)</li>
-      </ul>
-      <p class="text-gray-600">Additional insights: token balances, recent transactions, dApp interactions, staking data, and NFT links.</p>
-    </div>
+      <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Support this project</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <button onclick="copyToClipboard('0x667756929203c71f66cb33e9e69649f3c7feeae1')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between">EVM<i data-feather="copy" class="w-3 h-3 ml-2"></i></button>
+          <button onclick="copyToClipboard('GmvZtx5jwvcRPdkQSn4FTNpCLG1W2HSkyUvfyZ2jkT4x')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between">Solana<i data-feather="copy" class="w-3 h-3 ml-2"></i></button>
+          <button onclick="copyToClipboard('UQAt4u1-eqTizm_sYqS_WRn507BfxWaYGA2-Zo8DMdfeJgYS')" class="text-xs bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-md flex items-center justify-between">TON<i data-feather="copy" class="w-3 h-3 ml-2"></i></button>
+        </div>
+      </div>
 
-    <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
-      <h3 class="text-lg font-semibold text-gray-800 mb-4">Support & Social</h3>
-      <a href="https://x.com/marckellinfo" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm inline-flex items-center">
-        <img src="twitterlogo.jpg" alt="Twitter Avatar" class="twitter-avatar">
-        <span>@marckellinfo</span>
-      </a>
-    </div>
+      <div class="mt-8 bg-white rounded-xl shadow-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4">Follow me on Twitter</h3>
+        <a href="https://x.com/marckellinfo" target="_blank" class="text-blue-600 hover:text-blue-800 text-sm inline-flex items-center">
+          <img src="twitterlogo.jpg" alt="Twitter Avatar" class="twitter-avatar">
+          <span>@marckellinfo</span>
+        </a>
+      </div>
 
+    </div>
   </main>
 
   <footer class="bg-gray-50 py-8">
@@ -117,97 +126,124 @@
 
   <script>
     feather.replace();
-    function copyToClipboard(text) { navigator.clipboard.writeText(text).then(() => { alert('Copied: ' + text); }); }
+
+    function copyToClipboard(text){
+      navigator.clipboard.writeText(text).then(()=>{ alert('Copied: ' + text); });
+    }
 
     const COVALENT_API_KEY = "cqt_rQ36QyRfV6Gtv8rPj8HQXfC3vTPT";
-    function getChainId(network) { return network==="base"?8453:network==="eth"?1:network==="optimism"?10:network==="arbitrum"?42161:network==="polygon"?137:56; }
 
-    async function fetchScore(wallet, network) {
+    function getChainId(network){
+      switch(network){
+        case "base": return 8453;
+        case "eth": return 1;
+        case "optimism": return 10;
+        case "arbitrum": return 42161;
+        case "polygon": return 137;
+        case "bsc": return 56;
+        default: return 1;
+      }
+    }
+
+    async function fetchScore(wallet, network){
       const chainId=getChainId(network);
-      const url=`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?key=${COVALENT_API_KEY}`;
-      const res=await fetch(url); return await res.json();
+      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?key=${COVALENT_API_KEY}`);
+      return await res.json();
     }
 
-    async function fetchNFTs(wallet, chainId) {
-      const url=`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?nft=true&no-nft-fetch=false&key=${COVALENT_API_KEY}`;
-      const res=await fetch(url); return await res.json();
+    async function fetchNFTs(wallet, chainId){
+      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/balances_v2/?nft=true&no-nft-fetch=false&key=${COVALENT_API_KEY}`);
+      return await res.json();
     }
 
-    async function fetchTransactions(wallet, chainId) {
-      const url=`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?key=${COVALENT_API_KEY}`;
-      const res=await fetch(url); return await res.json();
+    async function fetchTransactions(wallet, chainId){
+      const res=await fetch(`https://api.covalenthq.com/v1/${chainId}/address/${wallet}/transactions_v2/?key=${COVALENT_API_KEY}`);
+      return await res.json();
     }
 
-    document.getElementById('scoreForm').addEventListener('submit', async function(e){
-      e.preventDefault();
-      const wallet=document.getElementById('walletAddress').value.trim();
-      const network=document.getElementById('networkSelect').value;
-      if(!wallet.match(/^0x[a-fA-F0-9]{40}$/)){ document.getElementById('errorMessage').classList.remove('hidden'); return; }
-      document.getElementById('errorMessage').classList.add('hidden');
-      document.getElementById('loadingIndicator').classList.remove('hidden');
-      document.getElementById('resultContainer').classList.add('hidden');
-      document.getElementById('insightsContainer').classList.add('hidden');
+    document.addEventListener('DOMContentLoaded', () => {
+      const form=document.getElementById('scoreForm');
+      form.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const wallet=document.getElementById('walletAddress').value.trim();
+        const network=document.getElementById('networkSelect').value;
+        if(!/^0x[a-fA-F0-9]{40}$/.test(wallet)){
+          document.getElementById('errorMessage').classList.remove('hidden');
+          return;
+        }
+        document.getElementById('errorMessage').classList.add('hidden');
+        document.getElementById('loadingIndicator').classList.remove('hidden');
+        document.getElementById('resultContainer').classList.add('hidden');
+        document.getElementById('insightsContainer').classList.add('hidden');
 
-      try{
-        const chainId=getChainId(network);
-        const result=await fetchScore(wallet, network);
-        const nftData=await fetchNFTs(wallet, chainId);
-        const txData=await fetchTransactions(wallet, chainId);
+        try{
+          const chainId=getChainId(network);
+          const result=await fetchScore(wallet, network);
+          const nftData=await fetchNFTs(wallet, chainId);
+          const txData=await fetchTransactions(wallet, chainId);
 
-        document.getElementById('loadingIndicator').classList.add('hidden');
-        document.getElementById('resultContainer').classList.remove('hidden');
-        document.getElementById('insightsContainer').classList.remove('hidden');
+          document.getElementById('loadingIndicator').classList.add('hidden');
+          document.getElementById('resultContainer').classList.remove('hidden');
+          document.getElementById('insightsContainer').classList.remove('hidden');
 
-        const balance=result.data.items.reduce((a,b)=>a+(b.quote||0),0);
-        const score=Math.min(100, Math.max(5, Math.round(balance%100)));
-        document.getElementById('scoreValue').textContent=score;
-        document.getElementById('scoreDescription').textContent="Based on transactions, tokens, NFTs, and balance.";
+          const balance=result.data.items.reduce((a,b)=>a+(b.quote||0),0);
+          const score=Math.min(100, Math.max(5, Math.round(balance%100)));
+          document.getElementById('scoreValue').textContent=score;
+          document.getElementById('scoreDescription').textContent="Based on transactions, tokens, NFTs, and balance.";
 
-        let tokensHtml="<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
-        result.data.items.slice(0,5).forEach(t=>{tokensHtml+=`<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;});
-        tokensHtml+="</ul>"; document.getElementById('topTokens').innerHTML=tokensHtml;
-
-        const txList=txData.data.items.slice(0,5);
-        let txHtml="<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
-        if(txList.length===0) txHtml+="<p>No recent transactions found.</p>";
-        else txList.forEach(tx=>{
-          const timestamp=new Date(tx.block_signed_at).toLocaleString();
-          let tokenTransfersHtml='';
-          tx.log_events?.forEach(event=>{
-            if(event.decoded?.name==="Transfer"){
-              const tokenName=event.sender_contract_ticker_symbol;
-              const amount=(parseFloat(event.decoded.params[2].value)/Math.pow(10,event.sender_contract_decimals)).toFixed(4);
-              tokenTransfersHtml+=`<li>${amount} ${tokenName}</li>`;
-            }
+          // Top tokens
+          let tokensHtml="<h4 class='font-medium text-gray-700 mb-2'>Top Tokens</h4><ul class='space-y-1'>";
+          result.data.items.slice(0,5).forEach(t=>{
+            tokensHtml+=`<li>${t.contract_ticker_symbol} - $${t.quote.toFixed(2)}</li>`;
           });
-          txHtml+=`<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
-            <p><strong>Time:</strong> ${timestamp}</p>
-            <ul>${tokenTransfersHtml||'<li>No token transfers</li>'}</ul>
-            <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
-          </div>`;
-        });
-        document.getElementById('recentTx').innerHTML=txHtml;
+          tokensHtml+="</ul>";
+          document.getElementById('topTokens').innerHTML=tokensHtml;
 
-        const nftItems=nftData.data.items.filter(i=>i.type==='nft');
-        let nftHtml='';
-        nftItems.forEach(item=>{
-          item.nft_data?.forEach(n=>{
-            nftHtml+=`<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
-                        <img src="${n.external_data?.image||'https://via.placeholder.com/150'}" alt="${n.external_data?.name||'NFT'}" class="rounded-md w-full mb-2">
-                      </a>`;
+          // Transactions
+          const txList=txData.data.items.slice(0,5);
+          let txHtml="<h4 class='font-medium text-gray-700 mb-2'>Recent Transactions</h4>";
+          if(txList.length===0) txHtml+="<p>No recent transactions found.</p>";
+          else txList.forEach(tx=>{
+            const timestamp=new Date(tx.block_signed_at).toLocaleString();
+            let tokenTransfersHtml='';
+            tx.log_events?.forEach(event=>{
+              if(event.decoded?.name==="Transfer"){
+                const tokenName=event.sender_contract_ticker_symbol;
+                const amount=(parseFloat(event.decoded.params[2].value)/Math.pow(10,event.sender_contract_decimals)).toFixed(4);
+                tokenTransfersHtml+=`<li>${amount} ${tokenName}</li>`;
+              }
+            });
+            txHtml+=`<div class="transaction border p-2 rounded-md mb-2 bg-gray-50">
+              <p><strong>Time:</strong> ${timestamp}</p>
+              <ul>${tokenTransfersHtml || '<li>No token transfers</li>'}</ul>
+              <p><strong>Tx Hash:</strong> <a href="https://etherscan.io/tx/${tx.tx_hash}" target="_blank" class="text-blue-600 hover:underline">${tx.tx_hash}</a></p>
+            </div>`;
           });
-        });
-        document.getElementById('nftContainer').innerHTML=nftHtml||'<p>No NFTs found.</p>';
+          document.getElementById('recentTx').innerHTML=txHtml;
 
-        document.getElementById('dapps').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h
-            document.getElementById('dapps').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
-        document.getElementById('staking').innerHTML = "<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
+          // NFTs
+          const nftItems=nftData.data.items.filter(i=>i.type==='nft');
+          let nftHtml='';
+          nftItems.forEach(item=>{
+            item.nft_data?.forEach(n=>{
+              nftHtml+=`<a href="${n.external_data?.external_url||'#'}" target="_blank" class="block">
+                          <img src="${n.external_data?.image||'https://via.placeholder.com/150'}" alt="${n.external_data?.name||'NFT'}" class="rounded-md w-full mb-2">
+                        </a>`;
+            });
+          });
+          document.getElementById('nftContainer').innerHTML=nftHtml||'<p>No NFTs found.</p>';
 
-      } catch(err) {
-        console.error(err);
-        alert("Error fetching data. Please check the wallet address and network.");
-      }
-    });
-  </script>
+          // dApps & staking placeholders
+          document.getElementById('dapps').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>dApps Interacted</h4><p>Coming soon.</p>";
+          document.getElementById('staking').innerHTML="<h4 class='font-medium text-gray-700 mb-2'>Staking Activity</h4><p>Coming soon.</p>";
+
+        } catch(err){
+          console.error(err);
+          alert("Error fetching data. Check wallet address and network.");
+        }
+      });
+    });
+  </script>
 </body>
-</html>
+  </html>
+  
